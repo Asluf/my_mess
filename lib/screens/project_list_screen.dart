@@ -84,6 +84,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final accent = isDark ? theme.colorScheme.secondary : theme.primaryColor;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -148,7 +150,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                         Row(
                           children: [
                             CircleAvatar(
-                              backgroundColor: theme.primaryColor,
+                              backgroundColor: accent,
                               child: const Icon(Icons.group,
                                   color: Colors.white, size: 20),
                             ),
@@ -210,7 +212,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                               '${total.toStringAsFixed(2)} AED',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: theme.primaryColor,
+                                color: accent,
                               ),
                             ),
                           ],
@@ -226,7 +228,7 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddProjectDialog,
-        backgroundColor: theme.primaryColor,
+        backgroundColor: accent,
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
       ),

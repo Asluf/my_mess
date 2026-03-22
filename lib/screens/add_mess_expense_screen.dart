@@ -71,6 +71,8 @@ class _AddMessExpenseScreenState extends State<AddMessExpenseScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final accent = isDark ? theme.colorScheme.secondary : theme.primaryColor;
 
     return Scaffold(
       appBar: AppBar(
@@ -111,11 +113,14 @@ class _AddMessExpenseScreenState extends State<AddMessExpenseScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: isSelected
-                              ? Border.all(
-                                  color: theme.primaryColor, width: 2)
-                              : Border.all(color: Colors.transparent),
+                              ? Border.all(color: accent, width: 2)
+                              : Border.all(
+                                  color: isDark
+                                      ? Colors.white24
+                                      : Colors.transparent,
+                                ),
                           color: isSelected
-                              ? theme.primaryColor.withAlpha(26)
+                              ? accent.withAlpha(isDark ? 50 : 26)
                               : null,
                         ),
                         child: Column(
@@ -209,29 +214,30 @@ class _AddMessExpenseScreenState extends State<AddMessExpenseScreen> {
               const SizedBox(height: 12),
 
               // Split info
-              Card(
-                color: theme.primaryColor.withAlpha(20),
-                shape: RoundedRectangleBorder(
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: accent.withAlpha(isDark ? 40 : 30),
                   borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: accent.withAlpha(isDark ? 80 : 60),
+                  ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    children: [
-                      Icon(Icons.info_outline,
-                          size: 18, color: theme.primaryColor),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Split equally among ${widget.members.length} members',
-                          style: TextStyle(
-                            color: theme.primaryColor,
-                            fontSize: 13,
-                          ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, size: 20, color: accent),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'Split equally among ${widget.members.length} members',
+                        style: TextStyle(
+                          color: accent,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
 
