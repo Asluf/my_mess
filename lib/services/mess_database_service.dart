@@ -100,6 +100,25 @@ class MessDatabaseService {
     return db.delete('mess_projects', where: 'id = ?', whereArgs: [id]);
   }
 
+  /// Fetches projects with member counts and total expenses in a single optimized query.
+  /// This replaces the N+1 query pattern and significantly improves performance.
+  Future<List<Map<String, dynamic>>> getProjectsWithStats() async {
+    final db = await database;
+    return db.rawQuery('''
+      SELECT 
+        p.id,
+        p.name,
+        p.created_at,
+        COUNT(DISTINCT m.id) as member_count,
+        COALESCE(SUM(e.amount), 0) as total_expenses
+      FROM mess_projects p
+      LEFT JOIN members m ON m.project_id = p.id
+      LEFT JOIN mess_expenses e ON e.project_id = p.id
+      GROUP BY p.id, p.name, p.created_at
+      ORDER BY p.created_at DESC
+    ''');
+  }
+
   // ── Members ──
 
   Future<int> insertMember(Member member) async {

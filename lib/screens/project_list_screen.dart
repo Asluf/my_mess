@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -114,8 +115,43 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
 
           return ListView.builder(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
-            itemCount: provider.projects.length,
+            itemCount: provider.projects.length + 1,
             itemBuilder: (context, index) {
+              // Show "Made by" footer at the end
+              if (index == provider.projects.length) {
+                final theme = Theme.of(context);
+                final bodySmall = theme.textTheme.bodySmall;
+                final secondaryTextColor = bodySmall?.color?.withOpacity(0.7);
+                return Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        CupertinoIcons.heart_fill,
+                        size: 16,
+                        color: Colors.red[400],
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Made by',
+                        style: bodySmall?.copyWith(
+                          color: secondaryTextColor,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Asluf',
+                        style: bodySmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFFFA726),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              
               final project = provider.projects[index];
               final memberCount = provider.memberCountFor(project.id!);
               final total = provider.totalExpensesFor(project.id!);
@@ -131,7 +167,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(14),
                   onTap: () async {
-                    final provider = context.read<ProjectProvider>();
                     await Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -139,8 +174,6 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                             MessProjectDetailScreen(project: project),
                       ),
                     );
-                    if (!mounted) return;
-                    provider.loadProjects();
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(16),

@@ -23,12 +23,17 @@ class ProjectProvider extends ChangeNotifier {
     _loading = true;
     notifyListeners();
 
-    _projects = await _db.getProjects();
-
-    for (final p in _projects) {
-      _memberCounts[p.id!] = await _db.getMemberCount(p.id!);
-      _totalExpenses[p.id!] = await _db.getTotalExpenses(p.id!);
-    }
+    // Fetch projects with member counts and expenses in a single optimized query
+    final statsData = await _db.getProjectsWithStats();
+    _projects = statsData.map((data) {
+      _memberCounts[data['id']] = data['member_count'] as int;
+      _totalExpenses[data['id']] = (data['total_expenses'] as num).toDouble();
+      return MessProject.fromMap({
+        'id': data['id'],
+        'name': data['name'],
+        'created_at': data['created_at'],
+      });
+    }).toList();
 
     _loading = false;
     notifyListeners();
