@@ -110,9 +110,7 @@ class _MessProjectDetailScreenState extends State<MessProjectDetailScreen> {
               context
                   .read<ProjectProvider>()
                   .deleteMember(widget.project.id!, member.id!);
-              context
-                  .read<ExpenseProvider>()
-                  .loadExpenses(widget.project.id!);
+              context.read<ExpenseProvider>().loadExpenses(widget.project.id!);
               Navigator.pop(ctx);
             },
             child: const Text('Remove'),
@@ -151,6 +149,8 @@ class _MessProjectDetailScreenState extends State<MessProjectDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final accent = isDark ? theme.colorScheme.secondary : theme.primaryColor;
 
     return Scaffold(
       appBar: AppBar(
@@ -345,7 +345,7 @@ class _MessProjectDetailScreenState extends State<MessProjectDetailScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _openAddExpense,
-        backgroundColor: theme.primaryColor,
+        backgroundColor: accent,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add),
         label: const Text('Add Expense'),

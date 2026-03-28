@@ -67,7 +67,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
           _isEditing ? 'Edit Member' : 'Add Member',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: accent,
+        backgroundColor: theme.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -81,8 +81,8 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
               Center(
                 child: CircleAvatar(
                   radius: 40,
-                  backgroundColor: Member
-                      .avatarColors[_selectedColorIndex % Member.avatarColors.length],
+                  backgroundColor: Member.avatarColors[
+                      _selectedColorIndex % Member.avatarColors.length],
                   child: Text(
                     _nameController.text.isNotEmpty
                         ? _nameController.text[0].toUpperCase()

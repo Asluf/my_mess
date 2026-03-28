@@ -87,7 +87,7 @@ class _AddMessExpenseScreenState extends State<AddMessExpenseScreen> {
           'Add Expense',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: accent,
+        backgroundColor: theme.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -266,12 +266,14 @@ class _AddMessExpenseScreenState extends State<AddMessExpenseScreen> {
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
                     : const Text(
                         'Save Expense',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
                       ),
               ),
             ],
