@@ -58,6 +58,8 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final accent = isDark ? theme.colorScheme.secondary : theme.primaryColor;
 
     return Scaffold(
       appBar: AppBar(
@@ -65,7 +67,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
           _isEditing ? 'Edit Member' : 'Add Member',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: theme.primaryColor,
+        backgroundColor: accent,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -153,7 +155,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
               FilledButton(
                 onPressed: _save,
                 style: FilledButton.styleFrom(
-                  backgroundColor: theme.primaryColor,
+                  backgroundColor: accent,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(

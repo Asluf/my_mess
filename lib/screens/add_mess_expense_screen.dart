@@ -27,6 +27,7 @@ class _AddMessExpenseScreenState extends State<AddMessExpenseScreen> {
 
   late int _selectedMemberId;
   DateTime _selectedDate = DateTime.now();
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -56,16 +57,22 @@ class _AddMessExpenseScreenState extends State<AddMessExpenseScreen> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final expense = MessExpense(
-      projectId: widget.projectId,
-      paidBy: _selectedMemberId,
-      amount: double.parse(_amountController.text.trim()),
-      description: _descController.text.trim(),
-      date: _selectedDate,
-    );
+    setState(() => _isSaving = true);
 
-    await context.read<ExpenseProvider>().addExpense(expense);
-    if (mounted) Navigator.pop(context);
+    try {
+      final expense = MessExpense(
+        projectId: widget.projectId,
+        paidBy: _selectedMemberId,
+        amount: double.parse(_amountController.text.trim()),
+        description: _descController.text.trim(),
+        date: _selectedDate,
+      );
+
+      await context.read<ExpenseProvider>().addExpense(expense);
+      if (mounted) Navigator.pop(context);
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
   }
 
   @override
@@ -80,7 +87,7 @@ class _AddMessExpenseScreenState extends State<AddMessExpenseScreen> {
           'Add Expense',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: theme.primaryColor,
+        backgroundColor: accent,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -244,19 +251,28 @@ class _AddMessExpenseScreenState extends State<AddMessExpenseScreen> {
               const SizedBox(height: 28),
 
               FilledButton(
-                onPressed: _save,
+                onPressed: _isSaving ? null : _save,
                 style: FilledButton.styleFrom(
-                  backgroundColor: theme.primaryColor,
+                  backgroundColor: accent,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
-                  'Save Expense',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
+                child: _isSaving
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
+                    : const Text(
+                        'Save Expense',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
               ),
             ],
           ),
